@@ -1,0 +1,45 @@
+Exercícios 2.4
+2.4.2
+Step in (command s): roda o próximo comando entrando nas subrotinas
+Step (command n): roda o próximo comando não entrando nas subrotinas
+
+2.4.3
+x - analisa o operador, caso o operador seja um registrador, ele verá o valor de memória apontado pelo registrador
+  caso seja um valor, verá a memória externa nesse endereço.
+p - analisa a expressão passada e imprime seu valor
+
+3.10.1
+Negative
+Zero
+Overflow
+Carry
+
+a) A soma ficou:
+0x87644321   -> -2023472351
+
+N Z V C
+1 0 1 0
+
+
+b) A soma ficou:
+0x12345677  ->   305419895
+
+N Z V C
+1 0 0 0
+
+c) A soma ficou:
+0x8a764321  ->  -1971961055
+
+N Z V C
+1 0 0 1
+
+3.10.2
+0x8000000 -> -2147483648
+NZVC=1010
+
+a) O resultado não está correto, pois houve overflow.
+b) Sim, assim como houve no caso apresentado.
+c) Pois quando vc trabalha com numeros signed,
+há uma capacidade menor para o módulo do número.
+
+3.10.3 e 3.10.4: binários junto ao arquivo
