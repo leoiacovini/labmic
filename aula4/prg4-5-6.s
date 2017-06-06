@@ -4,7 +4,7 @@
 main:
 	LDRB r0, =0x00 @ 0
 	LDRB r1, =0x01 @ 1
-	MOV r7, #6 @ Remaining loops
+	MOV r7, #7 @ Remaining loops
 
 loop:
 	ADD r0, r0, r1
@@ -14,5 +14,5 @@ loop:
 	SUBS r7, r7, #1 @ R7 = R7 - 1
 	BNE loop
 
-end:
+fim:
 	SWI 0x123456
