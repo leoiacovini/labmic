@@ -2,10 +2,10 @@
 .global main
 
 main:
-		LDR		r1, =0b10010010010010010010010010010010		@input
+		LDR		r1, =0xAAAA5555		@input
 		LDR		r2, =0													@output
-		LDR		r8, =0b10010										@sequencia
-		LDR		r9, =5													@tamanho da sequencia
+		LDR		r8, =0x5										@sequencia
+		LDR		r9, =4													@tamanho da sequencia
 		LDR		r0, =0 @i
 		RSB		r3, r9, #33		@ 32 - i
 		RSB		r5, r9, #32

@@ -3,23 +3,26 @@
 
 main:
 				MOV		r0, #0x4000
-				MOV		r1, #16
+
+				MOV		r1, #8
+				STRB		r1, [r0], #1
+				MOV		r1, #1
+				STRB		r1, [r0], #1
+				MOV		r1, #6
 				STRB		r1, [r0], #1
 				MOV		r1, #3
 				STRB		r1, [r0], #1
-				MOV		r1, #2
-				STRB		r1, [r0], #1
-				MOV		r1, #13
-				STRB		r1, [r0], #1
 				MOV		r1, #5
 				STRB		r1, [r0], #1
-				MOV		r1, #10
+				MOV		r1, #7
 				STRB		r1, [r0], #1
-				MOV		r1, #11
-				STRB		r1, [r0], #1
-				MOV		r1, #8
+				MOV		r1, #4
 				STRB		r1, [r0], #1
 				MOV		r1, #9
+				STRB		r1, [r0], #1
+				MOV		r1, #2
+
+
 				STRB		r1, [r0], #1
 				MOV		r1, #6
 				STRB		r1, [r0], #1
@@ -37,14 +40,18 @@ main:
 				STRB		r1, [r0], #1
 
 
-				MOV		r1, #4
+				MOV		r1, #3
 				MOV		r11, #0
 				MOV		r10, #0
-				MOV		r12, #34
-				;		r1 * (r1 * r1 + 1) / 2
-loop: ; main loop
-				;r11		percorre inicio das linhas
-				;r10		percorre inicio das colunas
+				MUL		r12, r1, r1
+				ADD 	r12, r12, #1
+				MUL		r11, r12, r1
+				MOV 	r12, r11, LSR #1
+				MOV		r11, #0
+				@		r1 * (r1 * r1 + 1) / 2
+loop: @ main loop
+				@r11		percorre inicio das linhas
+				@r10		percorre inicio das colunas
 				BL		checkrow
 				CMP		r9, #0
 				BEQ		not_magic
@@ -63,14 +70,15 @@ loop: ; main loop
 				CMP		r9, #0
 				BEQ		not_magic
 
-				ADD		r11, r11, #4	; percorre inicio linhas
-				ADD		r10, r10, #1    ; percorre inicio de colunas
-				CMP		r11, #16
+				ADD		r11, r11, r1	@ percorre inicio linhas
+				ADD		r10, r10, #1    @ percorre inicio de colunas
+				MUL 	r13, r1, r1
+				CMP		r11, r13
 				BLT		loop
 				B		done
 
 
-checkrow: ; funcao que chega linha
+checkrow: @ funcao que chega linha
 				MOV		r2, r11
 				MOV		r8, #0x4000
 				ADD		r8, r8, r2
@@ -81,7 +89,7 @@ loopcheckrow:
 				LDRB		r4, [r8], #1
 				ADD		r5, r5, r4
 				ADD		r3, r3, #1
-				CMP		r3, r1 ; vai até N
+				CMP		r3, r1 @ vai até N
 				BLT		loopcheckrow
 
 				CMP		r5, r12
@@ -89,7 +97,7 @@ loopcheckrow:
 				MOVNE	r9, #0
 				MOV		pc, r14
 
-checkcolumn: ;funcao que checa coluna
+checkcolumn: @funcao que checa coluna
 				MOV		r2, r10
 				MOV		r8, #0x4000
 				ADD		r8, r8, r2
@@ -99,7 +107,7 @@ loopcheckcolumn:
 				LDRB		r4, [r8], r1
 				ADD		r5, r5, r4
 				ADD		r3, r3, #1
-				CMP		r3, r1 ; vai até N
+				CMP		r3, r1 @ vai até N
 				BLT		loopcheckcolumn
 
 				CMP		r5, r12
