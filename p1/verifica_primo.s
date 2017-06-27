@@ -3,6 +3,16 @@
 
 main:
             LDR     r4, =0x06 @ Numero a ser verificado
+            BL      eh_primo  @ Chama subrotina eh_primo passando como argumento r4
+            B       done
+
+
+@ Subrotina eh_primo
+@ recebe um valor no r4 (Numero a ser verificado)
+@ retorna r0 = 1 se r4 é primo
+@ retorna r0 = 0 se r4 não é primo
+eh_primo:
+            STMFD   sp!, {r4-r12, lr} @ Empilha estado anterior
             MOV     r5, r4    @ Proximo numero a dividir
             LDR     r6, =0x00 @ Contatador de divisoes
 loop:
@@ -10,15 +20,24 @@ loop:
             MOV     r2, r5 @ Carrega Divisor
             CMP     r5, #0x00 @ Compara se ja estamos no 0
             BEQ     checagem @ Caso positivo entao vamos para checagem
-            BLNE     divide @ Caso nao, entao dividimo r4 por r5
+            BLNE    divide @ Caso nao, entao dividimo r4 por r5
 continue_loop:
             CMP     r1, #0 @ Verifica se o resto eh 0
             ADDEQ   r6, r6, #1 @ Se sim, entao a divisao deu certo, incrementamos o r6
             SUB     r5, r5, #1 @ Tiramos 1 do r5 para a proxima rodada
             B       loop @ Volta pro Loop
             
+checagem:
+            CMP     r6, #2  @ Compara se tivemos mais que 2 divisoes entre 1 e r4
+            LDRNE   r0, =0 @ r0 = 0 caso numero nao seja primo
+            LDREQ   r0, =1 @ r0 = 1 caso numero seja primo
+            LDMFD   sp!, {r4-r12, lr} @ Desempilha estado anterior
+            B       done @ Vai para p done
             
-divide: @ Divide r1 por r2, resto no r1, e quociente no r0
+@ Subrotina divide
+@ Divide r1 por r2, resto no r1, e quociente no r0
+divide:
+            STMFD   sp!, {r3, lr} @ Empilha estado anterior
             CMP     r2, #0
             BEQ     continue_loop
             
@@ -38,18 +57,8 @@ divide_next:
             MOVS    r3, r3, LSR #1
             MOVCC   r2, r2, LSR #1
             BCC     divide_next
-            MOV     pc, lr
-            
-            
-checagem:
-            CMP     r6, #2  @ Compara se tivemos mais que 2 divisoes entre 1 e r4
-            LDRNE   r10, =0 @ r10 = 0 caso numero nao seja primo
-            LDREQ   r10, =1 @ r10 = 1 caso numero seja primo
-            
-            
+            LDMFD   sp!, {r3, lr} @ Restaura estado anterior
+            MOV     pc, lr @ Retorna da subrotina
+
 done:
             SWI         0x123456 @ End
-
-@ Verificar r10 no final da execucao
-@ 1 = primo
-@ 0 = nao primo

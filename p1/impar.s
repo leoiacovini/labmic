@@ -1,6 +1,7 @@
-            .text
-            .global main
-            primos: .space 100
+.text
+.global main
+primos: .space 100
+
 main:
             LDR   r1, =0x1E @ 30 em hexa
             LDR   r2, primos @ ponteiro para a fila de primos
@@ -31,7 +32,7 @@ searching:
 @ Subrotina eh_primo
 @ recebe um valor no r4 (Numero a ser verificado)
 @ retorna r0 = 1 se r4 é primo
-@ retorna r1 = 0 se r4 não é primo
+@ retorna r0 = 0 se r4 não é primo
 eh_primo:
             STMFD   sp!, {r4-r12, lr} @ Empilha estado anterior
             MOV     r5, r4    @ Proximo numero a dividir
@@ -52,13 +53,13 @@ checagem:
             CMP     r6, #2  @ Compara se tivemos mais que 2 divisoes entre 1 e r4
             LDRNE   r0, =0 @ r0 = 0 caso numero nao seja primo
             LDREQ   r0, =1 @ r0 = 1 caso numero seja primo
-            LDMFD   sp!, {r4-r12, lr} @Desempilha estado anterior
-            MOV     pc, lr @ retorna da subrotina
+            LDMFD   sp!, {r4-r12, lr} @ Desempilha estado anterior
+            MOV     pc, lr @ Retorna da subrotina
 
 @ Subrotina divide
 @ Divide r1 por r2, resto no r1, e quociente no r0
 divide:
-            STMFD   sp!, {r3, lr}
+            STMFD   sp!, {r3, lr} @ Empilha estado anterior
             CMP     r2, #0
             BEQ     continue_loop
 
@@ -78,7 +79,7 @@ divide_next:
             MOVS    r3, r3, LSR #1
             MOVCC   r2, r2, LSR #1
             BCC     divide_next
-            LDMFD   sp!, {r3, lr}
+            LDMFD   sp!, {r3, lr} @ Restaura estado anterior
             MOV     pc, lr @ retorna da subrotina
 
 done:
