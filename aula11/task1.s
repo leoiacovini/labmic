@@ -76,8 +76,17 @@ do_irq_interrupt: @Rotina de interrupções IRQ
   LDR r0, INTPND @Carrega o registrador de status de interrupção
   LDR r0, [r0]
   TST r0, #0x0010 @verifica se é uma interupção de timer
-  BLNE c_entry @vai para o rotina de tratamento da interupção de timer
+  BLNE handler_timer @vai para o rotina de tratamento da interupção de timer
   LDMFD sp!, {r0 - r12, pc}^ @retorna
+
+
+handler_timer:
+  STMFD sp!, {r0 - r12, lr} @Empilha os registradores
+  LDR r0, TIMER0X
+  MOV r1, #0x0
+  STR r1, [r0] @p no registrador TIMER0X para limpar o pedido de interrupção
+  @ Inserir código que sera executado na interrupção de timer aqui (chaveamento de processos, ou alternar LED por exemplo)
+  LDMFD sp!, {r0 - r12, pc} @retorna
 
 timer_init:
   LDR r0, INTEN
@@ -88,7 +97,7 @@ timer_init:
   MOV r1, #0xA0 @enable timer module
   STR r1, [r0]
   LDR r0, TIMER0V
-  MOV r1, #0x1f @setting timer value
+  MOV r1, #0xff @setting timer value
   STR r1,[r0]
   mrs r0, cpsr
   bic r0,r0,#0x80
@@ -96,7 +105,5 @@ timer_init:
   mov pc, lr
 
 main:
-  bl timer_init @initialize interrupts and timer 0
-imp:
-  bl imprime2
-  b imp
+bl timer_init @initialize interrupts and timer 0
+stop: b stop
