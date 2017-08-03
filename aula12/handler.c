@@ -21,16 +21,23 @@ void delay(long long int a) {
 
 void imprime2() {
   delay(10000000/15);
-  print_uart0("2");
+  char *dois = "2";
+  print_uart0(dois);
 }
 
 void imprime3() {
-  delay(10000000/15);
-  print_uart0("3");
+  char *tres = "3";
+  while(1) {
+    delay(10000000/15);
+
+    print_uart0(tres);
+  }
 }
 
 int c_entry() {
-  print_uart0("1");
+
+  char *um = "1";
+  print_uart0(um);
   end_irq();
   return 0;
 }

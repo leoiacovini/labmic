@@ -6,6 +6,6 @@ SECTIONS
     irq.o (.text);
     handler.o (.text);
  }
- . = . + 0x1000; /* 4kB of stack memory */
+ . = . + 0x2000; /* 8kB of stack memory */
  stack_top = .;
 }
