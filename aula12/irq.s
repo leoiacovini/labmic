@@ -76,6 +76,8 @@ fetch_linha:
   LDREQ r12, =linhaA
   CMP r11, #1
   LDREQ r12, =linhaB
+  CMP r11, #2
+  LDREQ r12, =linhaC
   MOV pc, lr
 
 do_irq_interrupt: @Rotina de interrupções IRQ
@@ -183,8 +185,34 @@ setup_linhaB:
   STMFD r12!, {r0-r3} @ mock r12-r14. pc é o imprime3. SPSR é clonado do CPSR
   MOV pc, lr
 
+  setup_linhaC:
+    LDR r12, =linhaC
+    LDR r1, =0x1
+    LDR r2, =0x2
+    LDR r3, =0x3
+    LDR r4, =0x4
+    LDR r5, =0x5
+    LDR r6, =0x6
+    LDR r7, =0x7
+    LDR r8, =0x8
+    LDR r9, =0x9
+    LDR r10, =0x10
+    LDR r11, =0x12
+    STMFD r12!, {r11} @ stack r12
+    LDR r11, =0x11
+    STMFD r12!, {r0-r11} @ stack r0-r11
+    LDR r3, =stack_top
+    SUB r3, r3, #0x1000 @sp (r13)
+    LDR r2, =0x14 @ lr (r14)
+    LDR r1, =imprime4 @pc (r15)
+    MRS r0, cpsr
+    bic r0,r0,#0x80
+    STMFD r12!, {r0-r3} @ mock r12-r14. pc é o imprime3. SPSR é clonado do CPSR
+    MOV pc, lr
+
 main:
   bl setup_linhaB
+  bl setup_linhaC
   bl timer_init @initialize interrupts and timer 0
 imp:
   bl imprime2
@@ -196,6 +224,8 @@ top_linhaA: .space 100
 linhaA: .space 4
 top_linhaB: .space 100
 linhaB: .space 4
+top_linhaC: .space 100
+linhaC: .space 4
 
 current_task: .word 0
-num_tasks: .word 2
+num_tasks: .word 3

@@ -34,6 +34,20 @@ void imprime3() {
   }
 }
 
+void imprime4() {
+  char *nusp = "8";
+  while(1) {
+    delay(10000000/15);
+    print_uart0("8");
+    print_uart0("0");
+    print_uart0("4");
+    print_uart0("1");
+    print_uart0("8");
+    print_uart0("6");
+    print_uart0("3");
+  }
+}
+
 int c_entry() {
 
   char *um = "1";
